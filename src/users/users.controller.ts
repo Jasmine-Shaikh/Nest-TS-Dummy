@@ -1,21 +1,21 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './schemas/users.schema';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { create } from 'domain';
+import { Inject } from '@nestjs/common/decorators';
+import { forwardRef } from '@nestjs/common/utils';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(@Inject(forwardRef(() => UsersService)) private  usersService: UsersService) {}
 
   @Post("create")
   async create(@Body() userData: User): Promise<any> {
     return this.usersService.create(userData);
   }
 
-  @Get()
-  findAll() {
+  @Get("/")
+  async findAll(): Promise<any> {
     return this.usersService.findAll();
   }
 
@@ -25,7 +25,7 @@ export class UsersController {
   }
 
   // @Patch('update/:id')
-  // async update(@Param('id') id: string, @Body() userData: User)Promise<any>  {
+  // async update(@Param('id') id: string, @Body() userData: User):Promise<any>  {
   //   return this.usersService.update(id, userData);
   // }
 
