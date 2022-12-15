@@ -1,38 +1,36 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './schemas/users.schema';
-import { create } from 'domain';
-import { Inject } from '@nestjs/common/decorators';
-import { forwardRef } from '@nestjs/common/utils';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Controller('users')
 export class UsersController {
-  constructor(@Inject(forwardRef(() => UsersService)) private  usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @Post("create")
-  async create(@Body() userData: User): Promise<any> {
-    return this.usersService.create(userData);
+  async create(@Body() createUserDto: CreateUserDto): Promise<any> {
+    return this.usersService.create(createUserDto);
   }
 
-  @Get("/")
-  async findAll(): Promise<any> {
+  @Get()
+  async findAll(): Promise<User[]> {
     return this.usersService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string):Promise<User> {
     return this.usersService.findOne(id);
   }
 
-  // @Patch('update/:id')
-  // async update(@Param('id') id: string, @Body() userData: User):Promise<any>  {
-  //   return this.usersService.update(id, userData);
-  // }
-
+  
   @Delete('delete/:id')
   delete(@Param('id') id: string) {
     return this.usersService.delete(id);
   }
-
+  
+  // @Patch('update/:id')
+  // async update(@Param('id') id: string, @Body() userData: User):Promise<any>  {
+  //   return this.usersService.update(id, userData);
+  // }
   
 }
